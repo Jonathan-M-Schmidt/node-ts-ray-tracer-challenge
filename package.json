@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon dist/main.js",
+    "start": "tsc && node dist/index.js",
     "test": "jest",
-    "compile": "tsc -w"
+    "compile": "tsc"
   },
   "keywords": [],
   "author": "",

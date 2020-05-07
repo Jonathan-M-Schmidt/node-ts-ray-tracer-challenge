@@ -1,23 +1,39 @@
-import { Point, Vector, Tuple } from './Tuple';
+import { Tuple, Point, Vector } from './types';
+import tuple from './tuple';
 
-class Projectile {
-    constructor(public position: Tuple, public velocity: Tuple) {}
+type Projectile = {
+    position: Point,
+    velocity: Vector,
 }
 
-class Environment {
-    constructor(public gravity: Tuple, public wind: Tuple){}
+type Environment = {
+    gravity: Vector,
+    wind: Vector,
 }
+
+const createProjectile = (position: Point, velocity: Vector ): Projectile => ( {
+    position,
+    velocity,
+} );
+const createEnvironment = (gravity:Vector, wind: Vector): Environment => ({
+    gravity,
+    wind,
+});
 
 function tick(env: Environment, proj: Projectile) {
-    const position = proj.position.add( proj.velocity );
-    const velocity = proj.velocity.add(env.gravity.add(env.wind));
-    return new Projectile(position, velocity);
+    const position = tuple.add(proj.position, proj.velocity);
+    const velocity = tuple.add(proj.velocity, tuple.add(env.gravity, env.wind));
+    return createProjectile(position, velocity);
 }
 
-const env: Environment = new Environment(Tuple.getVector(0, -0.1, 0), Tuple.getVector(-0.01, 0, 0));
-let proj: Projectile = new Projectile(Tuple.getPoint(0, 1, 0), Tuple.getVector(1, 1, 0));
+const environment: Environment = createEnvironment(tuple.vector(0, -0.1, 0), tuple.vector(-0.01, 0, 0));
+let projectile: Projectile = createProjectile(tuple.point(0, 1, 0), tuple.vector(1, 1, 0));
 
-while( proj.position.y > 0 ) {
-    console.log(proj.position.y);
-    proj = tick(env, proj);
+function run() {
+    while( projectile.position.y > 0 ) {
+        console.log(projectile.position.y);
+        projectile = tick(environment, projectile);
+    }
 }
+
+export default run;
